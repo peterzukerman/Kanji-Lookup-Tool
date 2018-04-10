@@ -1,4 +1,4 @@
-# CS 126 FinalProject - Peter Zukerman
+# CS 126 Final Project - Peter Zukerman
 • The project will be a openFrameworks application 
 
 • Implement a windowed application 
