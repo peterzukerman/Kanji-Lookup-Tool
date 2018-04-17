@@ -1,9 +1,6 @@
 # CS 126 Final Project - Peter Zukerman
-• The project will be a openFrameworks application 
 
-• Implement a windowed application 
-
-• Use a significant library that we do not cover in class
+![alt text](https://github.com/uiuc-sp18-cs126/final-project-peterzukerman/blob/master/mockupImage.jpg)
 
 This is an application that helps learners of Japanese to simplify their character learning experience. It is designed to take in a list of kanji characters that the user already knows and returns a list of all the definitions of those words and example sentences using those words. It also gives the user export options to sort the data returned in various formats, for example for memorization through flashcards. This application uses a UI window that allows a user to submit a file of the characters that they know, or just type them in. The application has three databases, one for characters, one for sentences, and one for all words (a dictionary). The external libraries that this project uses are three-fold. It uses (https://xerces.apache.org/xerces-c/) for parsing the sentence database, which is in XML format. It also uses Ben Strasser’s CSV parser (https://github.com/ben-strasser/fast-cpp-csv-parser) for reading the dictionary and kanji files. The application uses openFrameworks to assist with GUI work and exporting into a different file format, and the entire application runs in the window. 
 
