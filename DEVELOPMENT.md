@@ -5,3 +5,7 @@ Created initial project. Added openFrameworks gui. Created cpp program to conver
 APR 24:
 
 CSV reader works. Loads example sentences with jpn and eng meaning, and japanese reading correctly. Reformated the example sentence database to be tab delimited instead of comma delimited.
+
+APR 25:
+
+XML reader works and is optimized for use outside of the program (through method calls for specific character.) CSV reader now parses into a HashMap sorted by character, with each character's values being a vector of 2d arrays containing the example sentences.
