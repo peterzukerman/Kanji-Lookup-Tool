@@ -12,6 +12,10 @@ public:
 
 	ofxDatGuiTextInput* input;
 	void onTextInputEvent(ofxDatGuiTextInputEvent e);
+	int numClicks;
+	ofxDatGuiButton* button;
+	void positionButtons();
+	void onButtonEvent(ofxDatGuiButtonEvent e);
 
 	ofTrueTypeFont font;
 
