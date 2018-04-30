@@ -13,3 +13,7 @@ XML reader works and is optimized for use outside of the program (through method
 APR 26
 
 Both readers work. Began work on GUI.
+
+APR 29
+
+Gui startup complete. Text input and button finished. Now to work on connecting dictionary and user input.
