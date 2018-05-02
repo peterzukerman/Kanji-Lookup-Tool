@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -8,8 +10,8 @@
 using namespace std;
 
 struct ReadingMeaning {
-	int readingJaOn; //Unicode code points
-	int readingJaKun;
+	string readingJaOn; 
+	string readingJaKun;
 	vector<string> meanings;
 };
 

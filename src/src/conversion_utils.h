@@ -12,3 +12,4 @@ std::string toCodepointHex(const std::string &u);
 int hexToInt(const std::string &u);
 bool isKanji(const string codePoint);
 bool isKanji(int codePoint);
+string utf8chr(int cp);

@@ -10,29 +10,32 @@ Type something into the component and see it displayed in the center of the scre
 https://github.com/braitsch/ofxDatGui @braitsch
 */
 using namespace std;
+
+void ofApp::initializeMaps() {
+	readingMeaningMap = extractReadingMeaningFromXmlFile(READING_MEANING_FILE);
+	exampleSentenceMap = buildCharacterToSampleSentencesMap(EXAMPLE_SENTENCE_FILE, EXAMPLE_SENTENCE_FILE_DELIMITER);
+}
+
 void ofApp::setup()
 {
 	ofSetWindowShape(1920, 1080);
 	ofSetWindowPosition(ofGetScreenWidth() / 2 - ofGetWidth() / 2, 0);
-
-	const char* xmlFile = "C:\\Users\\pzuke\\source\\repos\\jpnFinalProject\\bin\\data\\kanjidic2.xml";
-	map<int, ReadingMeaning> rm = extractReadingMeaningFromXmlFile(xmlFile);
-
-	string fileName = "C:\\Users\\pzuke\\source\\repos\\jpnFinalProject\\bin\\data\\sentences.csv";
-	char delimiter = ',';
-
-	map<int, vector<SentencePair*>> m = buildCharacterToSampleSentencesMap(fileName, delimiter);
-
-	input = new ofxDatGuiTextInput("File input", "Type the name of the file containing the characters.");
+	initializeMaps();
+	
+	ofxDatGuiThemeCustom* theme = new ofxDatGuiThemeCustom();
+	input = new ofxDatGuiTextInput("Character:", "");
+	input->setTheme(theme);
 	input->onTextInputEvent(this, &ofApp::onTextInputEvent);
-	input->setWidth(800, .2);
+	input->setWidth(1000, .2);
 	input->setPosition(ofGetWidth() / 2 - input->getWidth() / 2, 240);
-	font.load("ofxbraitsch/fonts/Verdana.ttf", 24);
-	numClicks = 0;
+
+	//characterReadingMeaningOutput.load("ofxbraitsch/fonts/msmincho.ttf", 32, true, true, false, 0.3f);
+	
+	font.load("ofxbraitsch/fonts/sazanami-gothic.ttf", 22, true, true, false, 0.3f);
 	ofSetWindowPosition(0, 0);
 
 	// instantiate a basic button and a toggle button //
-	button = new ofxDatGuiButton("Load File");
+	button = new ofxDatGuiButton("Go");
 
 	// position the components in the middle of the screen //
 	positionButtons();
@@ -59,10 +62,21 @@ void ofApp::draw()
 {
 	input->draw();
 	button->draw();
-	string str = "Filename " + input->getText();
-	ofRectangle bounds = font.getStringBoundingBox(str, ofGetWidth() / 2, ofGetHeight() / 2);
-	ofSetColor(ofColor::black);
-	font.drawString(str, bounds.x - bounds.width / 2, bounds.y - bounds.height / 2);
+	drawText();
+	//characterReadingMeaningOutput.drawString("Hajimemashite", 20, 20, ofxMultiLineText::Center);
+	
+}
+
+void ofApp::drawText()
+{
+	//string str = "‚Í‚¶‚ß‚Ü‚µ‚Ä"; //input->getText(); 
+	if (meaning.length() > 0) {
+		string output = "Meaning: " + meaning + "\n" + "Readings: " +
+			readingKun + "\n" + readingOn + "\n" + "Examples: " + exampleSentences;
+		ofRectangle bounds = font.getStringBoundingBox(exampleSentences, ofGetWidth() / 2, ofGetHeight() / 2);
+		ofSetColor(ofColor::black);
+		font.drawString(output, 50, 300);
+	}
 }
 
 void ofApp::onButtonEvent(ofxDatGuiButtonEvent e)
@@ -71,9 +85,34 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e)
 
 	// we can compare our button pointer to the target of the event //
 	if (e.target == button) {
-		button->setLabel("Loaded");
+		meaning = "";
+		readingOn = "";
+		readingKun = "";
+		exampleSentences = "";
 
-		// or we can check against the label of the event target //
+		string inputtedCharacter = input->getText();
+		int charAsInt = hexToInt(inputtedCharacter);
+		vector<SentencePair*> v = exampleSentenceMap[charAsInt];
+		int sentencesAdded = 0;
+		
+		for each (SentencePair* sp in v) {
+			if (sentencesAdded > 3) {
+				break;
+			}
+			exampleSentences += sp->EnglishSentence + "\n" + sp->JapaneseSentence.substr(0, 50) + "\n" + "\n";
+			sentencesAdded++;
+		}
+
+		
+		ReadingMeaning charRM = readingMeaningMap[charAsInt];
+		for each (string s in charRM.meanings){
+			meaning += s + "\n";
+		}           // utf8chr(charRM.readingJaOn);
+		readingOn = charRM.readingJaOn;
+		readingKun = charRM.readingJaKun;
+		this->update();
+
+
 	}
 
 }

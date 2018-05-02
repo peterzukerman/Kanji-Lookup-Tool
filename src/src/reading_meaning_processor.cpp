@@ -15,12 +15,12 @@ ReadingMeaning getReadingMeaningFromCharacterElement(XMLElement* characterElem) 
 		if (rmGroup) {
 			const char* readingJaOn = getTextFromChildElemWithAttribute(rmGroup, "reading", "r_type", "ja_on");
 			if (readingJaOn) {
-				rmData.readingJaOn = toCodepoint(readingJaOn);
+				rmData.readingJaOn = readingJaOn;
 			}
 
 			const char* readingJaKun = getTextFromChildElemWithAttribute(rmGroup, "reading", "r_type", "ja_kun");
 			if (readingJaKun) {
-				rmData.readingJaKun = toCodepoint(readingJaKun);
+				rmData.readingJaKun = readingJaKun;
 			}
 
 			vector<string> meanings;
