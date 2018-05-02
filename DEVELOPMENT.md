@@ -17,3 +17,7 @@ Both readers work. Began work on GUI.
 APR 29
 
 Gui startup complete. Text input and button finished. Now to work on connecting dictionary and user input.
+
+MAY 1
+
+Gui finished. Works with hex kanji input only, due to serioues limits of openFrameworks and the forced GUI system we have to use. Reading, meaning and examples are printed out to the screen.
