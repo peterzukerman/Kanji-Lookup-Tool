@@ -21,3 +21,7 @@ Gui startup complete. Text input and button finished. Now to work on connecting 
 MAY 1
 
 Gui finished. Works with hex kanji input only, due to serioues limits of openFrameworks and the forced GUI system we have to use. Reading, meaning and examples are printed out to the screen.
+
+MAY 2
+
+Project complete! Fully formatted, pleasant GUI. Now correctly prints out japanese character and examples with proper formatting!
