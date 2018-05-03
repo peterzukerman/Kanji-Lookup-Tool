@@ -12,7 +12,10 @@ https://github.com/braitsch/ofxDatGui @braitsch
 using namespace std;
 
 void ofApp::initializeMaps() {
+	cout << "Loading reading and meaning definition, please wait...  \n";
 	readingMeaningMap = extractReadingMeaningFromXmlFile(READING_MEANING_FILE);
+
+	cout << "Loading example sentences, please wait...";
 	exampleSentenceMap = buildCharacterToSampleSentencesMap(EXAMPLE_SENTENCE_FILE, EXAMPLE_SENTENCE_FILE_DELIMITER);
 }
 
@@ -23,34 +26,29 @@ void ofApp::setup()
 	initializeMaps();
 	
 	ofxDatGuiThemeCustom* theme = new ofxDatGuiThemeCustom();
-	input = new ofxDatGuiTextInput("Character:", "");
+	input = new ofxDatGuiTextInput("Input:", "");
 	input->setTheme(theme);
-	input->onTextInputEvent(this, &ofApp::onTextInputEvent);
-	input->setWidth(1000, .2);
+	input->setWidth(900, 0.3);
 	input->setPosition(ofGetWidth() / 2 - input->getWidth() / 2, 240);
 
-	//characterReadingMeaningOutput.load("ofxbraitsch/fonts/msmincho.ttf", 32, true, true, false, 0.3f);
-	
-	font.load("ofxbraitsch/fonts/sazanami-gothic.ttf", 22, true, true, false, 0.3f);
+	mainFont.load("ofxbraitsch/fonts/sazanami-gothic.ttf", 22, true, true, false, 0.3f);
+	kanjiFont.load("ofxbraitsch/fonts/sazanami-gothic.ttf", 240, true, true, false, 0.3f);
+	titleFont.load("ofxbraitsch/fonts/sazanami-gothic.ttf", 40, true, true, false, 0.3f);
 	ofSetWindowPosition(0, 0);
 
-	// instantiate a basic button and a toggle button //
+	// instantiate a basic button //
 	button = new ofxDatGuiButton("Go");
+	button->setTheme(theme);
+	button->setWidth(150);
+	button->setBackgroundColor(ofColor::grey);
 
-	// position the components in the middle of the screen //
-	positionButtons();
+	// position the button to the right of the text box //
+	button->setPosition(ofGetWidth() / 2 + input->getWidth() / 2, 240);
 
 	// and register to listen for events //
 	button->onButtonEvent(this, &ofApp::onButtonEvent);
 }
 
-void ofApp::onTextInputEvent(ofxDatGuiTextInputEvent e)
-{
-	// text input events carry the text of the input field //
-	cout << "From Event Object: " << e.text << endl;
-	// although you can also retrieve it from the event target //
-	cout << "From Event Target: " << e.target->getText() << endl;
-}
 
 void ofApp::update()
 {
@@ -63,50 +61,60 @@ void ofApp::draw()
 	input->draw();
 	button->draw();
 	drawText();
-	//characterReadingMeaningOutput.drawString("Hajimemashite", 20, 20, ofxMultiLineText::Center);
 	
 }
 
 void ofApp::drawText()
 {
-	//string str = "‚Í‚¶‚ß‚Ü‚µ‚Ä"; //input->getText(); 
+	ofSetColor(ofColor::chocolate);
+	titleFont.drawString("Kanji Character Lookup", ofGetWidth() / 2 - input->getWidth() / 2 + 200, 130);
+	string output = "";
 	if (meaning.length() > 0) {
-		string output = "Meaning: " + meaning + "\n" + "Readings: " +
-			readingKun + "\n" + readingOn + "\n" + "Examples: " + exampleSentences;
-		ofRectangle bounds = font.getStringBoundingBox(exampleSentences, ofGetWidth() / 2, ofGetHeight() / 2);
+		output = "Meaning: \n" + meaning + "\n" + "Readings: \n Kunyomi: " +
+			readingKun + "\n Onyomi: " + readingOn + "\n" + "\n" + "Examples: \n" + exampleSentences;
+	}
+	else {
+		output = "This character has no entries";
+	}
+
+	if (inputKanjiAsUnicode > 0 )
+	{
 		ofSetColor(ofColor::black);
-		font.drawString(output, 50, 300);
+		mainFont.drawString(output, 50, 350);
+		string utf8Char = utf8chr(inputKanjiAsUnicode);
+		ofSetColor(ofColor::darkRed);
+		kanjiFont.drawString(utf8Char, 1200, 600);
 	}
 }
 
 void ofApp::onButtonEvent(ofxDatGuiButtonEvent e)
 {
-	// we have a couple ways to figure out which button was clicked //
+
 
 	// we can compare our button pointer to the target of the event //
 	if (e.target == button) {
-		meaning = "";
-		readingOn = "";
-		readingKun = "";
-		exampleSentences = "";
 
-		string inputtedCharacter = input->getText();
-		int charAsInt = hexToInt(inputtedCharacter);
-		vector<SentencePair*> v = exampleSentenceMap[charAsInt];
+		clearDataVariables();
+
+		string inputtedCharacter = "0x" + input->getText();
+
+		//add check to make sure input actually is in hex
+		inputKanjiAsUnicode = hexToInt(inputtedCharacter);
+		vector<SentencePair*> v = exampleSentenceMap[inputKanjiAsUnicode];
 		int sentencesAdded = 0;
 		
 		for each (SentencePair* sp in v) {
 			if (sentencesAdded > 3) {
 				break;
 			}
-			exampleSentences += sp->EnglishSentence + "\n" + sp->JapaneseSentence.substr(0, 50) + "\n" + "\n";
+			exampleSentences += sp->EnglishSentence + "\n" + sp->JapaneseSentence.substr(0, 150) + "\n" + "\n";
 			sentencesAdded++;
 		}
 
 		
-		ReadingMeaning charRM = readingMeaningMap[charAsInt];
+		ReadingMeaning charRM = readingMeaningMap[inputKanjiAsUnicode];
 		for each (string s in charRM.meanings){
-			meaning += s + "\n";
+			meaning += "\t" + s + "\n";
 		}           // utf8chr(charRM.readingJaOn);
 		readingOn = charRM.readingJaOn;
 		readingKun = charRM.readingJaKun;
@@ -117,9 +125,14 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e)
 
 }
 
-void ofApp::positionButtons()
+void ofApp::clearDataVariables()
 {
-	button->setPosition(ofGetWidth() / 2 + input->getWidth() / 2, 240);
+	meaning = "";
+	readingOn = "";
+	readingKun = "";
+	exampleSentences = "";
+	inputKanjiAsUnicode = 0;
 }
+
 
 

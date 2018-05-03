@@ -41,7 +41,7 @@
 
 
 //===========================================================
-#ifdef TARGET_WIN32
+#ifdef TARGET_WIN32x
 
 static const basic_string<unsigned int> convToUTF32(const string &src) {
   if (src.size() == 0) {

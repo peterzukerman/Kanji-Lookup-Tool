@@ -19,6 +19,7 @@ class ofApp : public ofBaseApp {
 	string readingOn = "";
 	string readingKun = "";
 	string exampleSentences = "";
+	int inputKanjiAsUnicode = 0;
 
 public:
 	void setup();
@@ -29,14 +30,14 @@ public:
 	
 
 	ofxDatGuiTextInput* input;
-	void onTextInputEvent(ofxDatGuiTextInputEvent e);
 
 	ofxMultiLineText characterReadingMeaningOutput;
 	ofxDatGuiButton* button;
-	void positionButtons();
 	void onButtonEvent(ofxDatGuiButtonEvent e);
 
-	ofxTrueTypeFontUC font;
+	void clearDataVariables();
+
+	ofxTrueTypeFontUC mainFont, kanjiFont, titleFont;
 
 };
 

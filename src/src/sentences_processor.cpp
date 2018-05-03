@@ -52,9 +52,7 @@ map<int, vector<SentencePair*>> buildCharacterToSampleSentencesMap(string senten
 		} while (start < end);
 
 		recordCount++;
-		if (recordCount % 5000 == 0) {
-			cout << "Processed " << recordCount << " records" << endl;
-		}
+	
 	}
 
 	ip.close();
