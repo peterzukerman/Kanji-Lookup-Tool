@@ -1,4 +1,4 @@
-# CS 126 Final Project - Peter Zukerman
+Kanji Lookup Tool
 
 ![alt text](https://github.com/uiuc-sp18-cs126/final-project-peterzukerman/blob/master/mockupImage.jpg)
 
